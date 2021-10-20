@@ -29,6 +29,7 @@ import nodomain.freeyourgadget.gadgetbridge.model.CallSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.CannedMessagesSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.MusicSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.MusicStateSpec;
+import nodomain.freeyourgadget.gadgetbridge.model.NavigationInfoSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.NotificationSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.WeatherSpec;
 
@@ -53,6 +54,8 @@ public interface EventHandler {
     void onSetMusicState(MusicStateSpec stateSpec);
 
     void onSetMusicInfo(MusicSpec musicSpec);
+
+    void onSetNavigationInfo(NavigationInfoSpec navigationInfoSpec);
 
     void onEnableRealtimeSteps(boolean enable);
 
