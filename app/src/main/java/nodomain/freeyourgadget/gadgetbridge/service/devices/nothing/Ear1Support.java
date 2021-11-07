@@ -84,6 +84,7 @@ public class Ear1Support extends AbstractSerialDeviceSupport {
 
     @Override
     protected GBDeviceIoThread createDeviceIOThread() {
-        return new NothingIOThread(getDevice(), getContext(), (NothingProtocol) getDeviceProtocol(), Ear1Support.this, getBluetoothAdapter());
+        return new NothingIOThread(getDevice(), getContext(), (NothingProtocol) getDeviceProtocol(),
+                Ear1Support.this, getBluetoothAdapter());
     }
 }

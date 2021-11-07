@@ -47,6 +47,7 @@ import nodomain.freeyourgadget.gadgetbridge.entities.Device;
 import nodomain.freeyourgadget.gadgetbridge.entities.DeviceAttributesDao;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDevice;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDeviceCandidate;
+import nodomain.freeyourgadget.gadgetbridge.model.BatteryConfig;
 import nodomain.freeyourgadget.gadgetbridge.util.Prefs;
 
 import static nodomain.freeyourgadget.gadgetbridge.GBApplication.getPrefs;
@@ -72,7 +73,12 @@ public abstract class AbstractDeviceCoordinator implements DeviceCoordinator {
 
     @Override
     public GBDevice createDevice(GBDeviceCandidate candidate) {
-        return new GBDevice(candidate.getDevice().getAddress(), candidate.getName(), null, getDeviceType());
+        GBDevice gbDevice = new GBDevice(candidate.getDevice().getAddress(), candidate.getName(), null, getDeviceType());
+        for (BatteryConfig batteryConfig : getBatteryConfig()) {
+            gbDevice.setBatteryIcon(batteryConfig.getBatteryIcon(), batteryConfig.getBatteryIndex());
+            gbDevice.setBatteryLabel(batteryConfig.getBatteryLabel(), batteryConfig.getBatteryIndex());
+        }
+        return gbDevice;
     }
 
     @Override
@@ -246,4 +252,16 @@ public abstract class AbstractDeviceCoordinator implements DeviceCoordinator {
     public Class<? extends Activity> getCalibrationActivity() {
         return null;
     }
+
+    @Override
+    public int getBatteryCount() {
+        return 1;
+    } //multiple battery support, default is 1, maximum is 3, 0 will disable the battery in UI
+
+    @Override
+    public BatteryConfig[] getBatteryConfig() {
+        return new BatteryConfig[0];
+    }
+
+
 }

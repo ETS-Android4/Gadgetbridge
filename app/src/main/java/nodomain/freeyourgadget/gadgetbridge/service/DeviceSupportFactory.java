@@ -38,6 +38,7 @@ import nodomain.freeyourgadget.gadgetbridge.service.devices.banglejs.BangleJSDev
 import nodomain.freeyourgadget.gadgetbridge.service.devices.casio.CasioGB6900DeviceSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.casio.CasioGBX100DeviceSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.domyos.DomyosT540Support;
+import nodomain.freeyourgadget.gadgetbridge.service.devices.galaxy_buds.GalaxyBudsDeviceSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.hplus.HPlusSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.huami.HuamiSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.huami.amazfitband5.AmazfitBand5Support;
@@ -93,6 +94,7 @@ import nodomain.freeyourgadget.gadgetbridge.service.devices.um25.Support.UM25Sup
 import nodomain.freeyourgadget.gadgetbridge.service.devices.vibratissimo.VibratissimoSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.waspos.WaspOSDeviceSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.watch9.Watch9DeviceSupport;
+import nodomain.freeyourgadget.gadgetbridge.service.devices.sony.wh1000xm3.SonyWh1000Xm3Support;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.xwatch.XWatchSupport;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.zetime.ZeTimeDeviceSupport;
 import nodomain.freeyourgadget.gadgetbridge.util.GB;
@@ -361,6 +363,12 @@ public class DeviceSupportFactory {
                         break;
                     case NOTHING_EAR1:
                         deviceSupport = new ServiceDeviceSupport(new Ear1Support(), EnumSet.of(ServiceDeviceSupport.Flags.BUSY_CHECKING));
+                        break;
+                    case GALAXY_BUDS:
+                        deviceSupport = new ServiceDeviceSupport(new GalaxyBudsDeviceSupport(), EnumSet.of(ServiceDeviceSupport.Flags.BUSY_CHECKING));
+                        break;
+                    case SONY_WH_1000XM3:
+                        deviceSupport = new ServiceDeviceSupport(new SonyWh1000Xm3Support(), EnumSet.of(ServiceDeviceSupport.Flags.BUSY_CHECKING));
                         break;
                 }
                 if (deviceSupport != null) {

@@ -161,7 +161,7 @@ public abstract class BtClassicIoThread extends GBDeviceIoThread {
             mOutStream = mBtSocket.getOutputStream();
             setUpdateState(GBDevice.State.CONNECTED);
         } catch (IOException e) {
-            LOG.error("Server socket cannot be started.");
+            LOG.error("Server socket cannot be started.", e);
             //LOG.error(e.getMessage());
             setUpdateState(originalState);
             mInStream = null;
@@ -170,10 +170,14 @@ public abstract class BtClassicIoThread extends GBDeviceIoThread {
             return false;
         }
 
-        write(mProtocol.encodeSetTime());
-        setUpdateState(GBDevice.State.INITIALIZED);
+        initialize();
 
         return true;
+    }
+
+    protected void initialize() {
+        write(mProtocol.encodeSetTime());
+        setUpdateState(GBDevice.State.INITIALIZED);
     }
 
     /**

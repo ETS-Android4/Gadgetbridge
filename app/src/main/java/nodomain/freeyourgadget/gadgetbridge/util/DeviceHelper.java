@@ -49,6 +49,7 @@ import nodomain.freeyourgadget.gadgetbridge.devices.banglejs.BangleJSCoordinator
 import nodomain.freeyourgadget.gadgetbridge.devices.casio.gb6900.CasioGB6900DeviceCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.casio.gbx100.CasioGBX100DeviceCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.domyos.DomyosT540Cooridnator;
+import nodomain.freeyourgadget.gadgetbridge.devices.galaxy_buds.GalaxyBudsDeviceCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.hplus.EXRIZUK8Coordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.hplus.HPlusCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.hplus.MakibesF68Coordinator;
@@ -111,12 +112,14 @@ import nodomain.freeyourgadget.gadgetbridge.devices.um25.Coordinator.UM25Coordin
 import nodomain.freeyourgadget.gadgetbridge.devices.vibratissimo.VibratissimoCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.waspos.WaspOSCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.watch9.Watch9DeviceCoordinator;
+import nodomain.freeyourgadget.gadgetbridge.devices.sony.wh1000xm3.SonyWh1000Xm3Coordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.xwatch.XWatchCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.devices.zetime.ZeTimeCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.entities.Device;
 import nodomain.freeyourgadget.gadgetbridge.entities.DeviceAttributes;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDevice;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDeviceCandidate;
+import nodomain.freeyourgadget.gadgetbridge.model.BatteryConfig;
 import nodomain.freeyourgadget.gadgetbridge.model.DeviceType;
 
 public class DeviceHelper {
@@ -308,6 +311,9 @@ public class DeviceHelper {
         result.add(new DomyosT540Cooridnator());
         result.add(new FitProDeviceCoordinator());
         result.add(new Ear1Coordinator());
+        result.add(new GalaxyBudsDeviceCoordinator());
+        result.add(new SonyWh1000Xm3Coordinator());
+
         return result;
     }
 
@@ -338,6 +344,12 @@ public class DeviceHelper {
     public GBDevice toGBDevice(Device dbDevice) {
         DeviceType deviceType = DeviceType.fromKey(dbDevice.getType());
         GBDevice gbDevice = new GBDevice(dbDevice.getIdentifier(), dbDevice.getName(), dbDevice.getAlias(), deviceType);
+        DeviceCoordinator coordinator = getCoordinator(gbDevice);
+        for (BatteryConfig batteryConfig : coordinator.getBatteryConfig()) {
+            gbDevice.setBatteryIcon(batteryConfig.getBatteryIcon(), batteryConfig.getBatteryIndex());
+            gbDevice.setBatteryLabel(batteryConfig.getBatteryLabel(), batteryConfig.getBatteryIndex());
+        }
+
         List<DeviceAttributes> deviceAttributesList = dbDevice.getDeviceAttributesList();
         if (deviceAttributesList.size() > 0) {
             gbDevice.setModel(dbDevice.getModel());

@@ -36,6 +36,7 @@ import nodomain.freeyourgadget.gadgetbridge.entities.DaoSession;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDevice;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDeviceCandidate;
 import nodomain.freeyourgadget.gadgetbridge.model.ActivitySample;
+import nodomain.freeyourgadget.gadgetbridge.model.BatteryConfig;
 import nodomain.freeyourgadget.gadgetbridge.model.DeviceType;
 
 /**
@@ -347,5 +348,15 @@ public interface DeviceCoordinator {
      * Indicates which device specific language the device supports
      */
     String[] getSupportedLanguageSettings(GBDevice device);
+
+    /**
+     *
+     * Multiple battery support: Indicates how many batteries the device has.
+     * 1 is default, 3 is maximum at the moment (as per UI layout)
+     * 0 will disable the battery from the UI
+     */
+    int getBatteryCount();
+
+    BatteryConfig[] getBatteryConfig();
 
 }

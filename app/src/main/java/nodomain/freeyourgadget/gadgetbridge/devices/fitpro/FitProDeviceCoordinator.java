@@ -60,9 +60,10 @@ public class FitProDeviceCoordinator extends AbstractDeviceCoordinator {
             BluetoothDevice device = candidate.getDevice();
             String name = device.getName();
 
-            if (name != null &&
-                    (name.equals("M6") ||
-                            name.equals("M4"))
+            if (name != null && (
+                    name.equals("M6") ||
+                    name.equals("M4") ||
+                    name.equals("LH716"))
             ) {
                 return DeviceType.FITPRO;
             }
@@ -180,6 +181,7 @@ public class FitProDeviceCoordinator extends AbstractDeviceCoordinator {
                 R.xml.devicesettings_vibrations_enable,
                 R.xml.devicesettings_notifications_enable,
                 R.xml.devicesettings_fitpro,
+                R.xml.devicesettings_transliteration
         };
     }
 }

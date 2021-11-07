@@ -144,38 +144,60 @@ public class GBDeviceAdapterv2 extends RecyclerView.Adapter<GBDeviceAdapterv2.Vi
 
         //begin of action row
         //battery
-        holder.batteryStatusBox.setVisibility(View.VISIBLE);
-        short batteryLevel = device.getBatteryLevel();
-        float batteryVoltage = device.getBatteryVoltage();
-        BatteryState batteryState = device.getBatteryState();
+        // multiple battery support: at this point we support up to three batteries
+        // to support more batteries, the battery UI would need to be extended
 
-        if (batteryLevel != GBDevice.BATTERY_UNKNOWN) {
-            holder.batteryStatusBox.setVisibility(View.VISIBLE);
-            holder.batteryStatusLabel.setText(device.getBatteryLevel() + "%");
-            if (BatteryState.BATTERY_CHARGING.equals(batteryState) ||
-                    BatteryState.BATTERY_CHARGING_FULL.equals(batteryState)) {
-                holder.batteryIcon.setImageLevel(device.getBatteryLevel() + 100);
-            } else {
-                holder.batteryIcon.setImageLevel(device.getBatteryLevel());
+        holder.batteryStatusBox0.setVisibility(coordinator.getBatteryCount() > 0 ? View.VISIBLE : View.GONE);
+        holder.batteryStatusBox1.setVisibility(coordinator.getBatteryCount() > 1 ? View.VISIBLE : View.GONE);
+        holder.batteryStatusBox2.setVisibility(coordinator.getBatteryCount() > 2 ? View.VISIBLE : View.GONE);
+
+        LinearLayout[] batteryStatusBoxes = {holder.batteryStatusBox0, holder.batteryStatusBox1, holder.batteryStatusBox2};
+        TextView[] batteryStatusLabels = {holder.batteryStatusLabel0, holder.batteryStatusLabel1, holder.batteryStatusLabel2};
+        ImageView[] batteryIcons = {holder.batteryIcon0, holder.batteryIcon1, holder.batteryIcon2};
+
+        for (int batteryIndex = 0; batteryIndex < coordinator.getBatteryCount(); batteryIndex++) {
+
+            int batteryLevel = device.getBatteryLevel(batteryIndex);
+            float batteryVoltage = device.getBatteryVoltage(batteryIndex);
+            BatteryState batteryState = device.getBatteryState(batteryIndex);
+            int batteryIcon = device.getBatteryIcon(batteryIndex);
+            int batteryLabel = device.getBatteryLabel(batteryIndex); //unused for now
+            batteryIcons[batteryIndex].setImageResource(R.drawable.level_list_battery);
+
+            if (batteryIcon != GBDevice.BATTERY_ICON_DEFAULT){
+                batteryIcons[batteryIndex].setImageResource(batteryIcon);
             }
-        } else if (BatteryState.NO_BATTERY.equals(batteryState) && batteryVoltage != GBDevice.BATTERY_UNKNOWN) {
-            holder.batteryStatusBox.setVisibility(View.VISIBLE);
-            holder.batteryStatusLabel.setText(String.format(Locale.getDefault(), "%.2f", batteryVoltage));
-            holder.batteryIcon.setImageLevel(200);
+
+            if (batteryLevel != GBDevice.BATTERY_UNKNOWN) {
+                batteryStatusLabels[batteryIndex].setText(device.getBatteryLevel(batteryIndex) + "%");
+                if (BatteryState.BATTERY_CHARGING.equals(batteryState) ||
+                        BatteryState.BATTERY_CHARGING_FULL.equals(batteryState)) {
+                    batteryIcons[batteryIndex].setImageLevel(device.getBatteryLevel(batteryIndex) + 100);
+                } else {
+                    batteryIcons[batteryIndex].setImageLevel(device.getBatteryLevel(batteryIndex));
+                }
+            } else if (BatteryState.NO_BATTERY.equals(batteryState) && batteryVoltage != GBDevice.BATTERY_UNKNOWN) {
+                batteryStatusLabels[batteryIndex].setText(String.format(Locale.getDefault(), "%.2f", batteryVoltage));
+                batteryIcons[batteryIndex].setImageLevel(200);
+            } else {
+                //should be the "default" status, shown when the device is not connected
+                batteryStatusLabels[batteryIndex].setText("");
+                batteryIcons[batteryIndex].setImageLevel(50);
+            }
+            final int finalBatteryIndex = batteryIndex;
+            batteryStatusBoxes[batteryIndex].setOnClickListener(new View.OnClickListener() {
+                                                               @Override
+                                                               public void onClick(View v) {
+                                                                   Intent startIntent;
+                                                                   startIntent = new Intent(context, BatteryInfoActivity.class);
+                                                                   startIntent.putExtra(GBDevice.EXTRA_DEVICE, device);
+                                                                   startIntent.putExtra(GBDevice.BATTERY_INDEX, finalBatteryIndex);
+                                                                   context.startActivity(startIntent);
+                                                               }
+                                                           }
+            );
+
         }
-        holder.batteryStatusBox.setOnClickListener(new View.OnClickListener()
-
-                                                   {
-                                                       @Override
-                                                       public void onClick(View v) {
-                                                           Intent startIntent;
-                                                           startIntent = new Intent(context, BatteryInfoActivity.class);
-                                                           startIntent.putExtra(GBDevice.EXTRA_DEVICE, device);
-                                                           context.startActivity(startIntent);
-                                                       }
-                                                   }
-        );
-
         holder.heartRateStatusBox.setVisibility((device.isInitialized() && coordinator.supportsRealtimeData() && coordinator.supportsHeartRateMeasurement(device)) ? View.VISIBLE : View.GONE);
         if (parent.getContext() instanceof ControlCenterv2) {
             ActivitySample sample = ((ControlCenterv2) parent.getContext()).getCurrentHRSample();
@@ -590,9 +612,15 @@ public class GBDeviceAdapterv2 extends RecyclerView.Adapter<GBDeviceAdapterv2.Vi
         TextView deviceStatusLabel;
 
         //actions
-        LinearLayout batteryStatusBox;
-        TextView batteryStatusLabel;
-        ImageView batteryIcon;
+        LinearLayout batteryStatusBox0;
+        TextView batteryStatusLabel0;
+        ImageView batteryIcon0;
+        LinearLayout batteryStatusBox1;
+        TextView batteryStatusLabel1;
+        ImageView batteryIcon1;
+        LinearLayout batteryStatusBox2;
+        TextView batteryStatusLabel2;
+        ImageView batteryIcon2;
         ImageView deviceSpecificSettingsView;
         LinearLayout fetchActivityDataBox;
         ImageView fetchActivityData;
@@ -628,9 +656,18 @@ public class GBDeviceAdapterv2 extends RecyclerView.Adapter<GBDeviceAdapterv2.Vi
             deviceStatusLabel = view.findViewById(R.id.device_status);
 
             //actions
-            batteryStatusBox = view.findViewById(R.id.device_battery_status_box);
-            batteryStatusLabel = view.findViewById(R.id.battery_status);
-            batteryIcon = view.findViewById(R.id.device_battery_status);
+            batteryStatusBox0 = view.findViewById(R.id.device_battery_status_box);
+            batteryStatusLabel0 = view.findViewById(R.id.battery_status);
+            batteryIcon0 = view.findViewById(R.id.device_battery_status);
+            batteryStatusBox1 = view.findViewById(R.id.device_battery_status_box1);
+            batteryStatusLabel1 = view.findViewById(R.id.battery_status1);
+            batteryIcon1 = view.findViewById(R.id.device_battery_status1);
+            batteryStatusBox2 = view.findViewById(R.id.device_battery_status_box2);
+            batteryStatusLabel2 = view.findViewById(R.id.battery_status2);
+            batteryIcon2 = view.findViewById(R.id.device_battery_status2);
+
+
+
             deviceSpecificSettingsView = view.findViewById(R.id.device_specific_settings);
             fetchActivityDataBox = view.findViewById(R.id.device_action_fetch_activity_box);
             fetchActivityData = view.findViewById(R.id.device_action_fetch_activity);

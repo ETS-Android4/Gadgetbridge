@@ -19,14 +19,19 @@ import java.util.Date;
 
 import nodomain.freeyourgadget.gadgetbridge.GBApplication;
 import nodomain.freeyourgadget.gadgetbridge.R;
+import nodomain.freeyourgadget.gadgetbridge.devices.DeviceCoordinator;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDevice;
+import nodomain.freeyourgadget.gadgetbridge.model.BatteryConfig;
 import nodomain.freeyourgadget.gadgetbridge.util.DateTimeUtils;
+import nodomain.freeyourgadget.gadgetbridge.util.DeviceHelper;
 
-public class BatteryInfoActivity extends AbstractGBActivity {
+public class
+BatteryInfoActivity extends AbstractGBActivity {
     private static final Logger LOG = LoggerFactory.getLogger(BatteryInfoActivity.class);
     GBDevice gbDevice;
     private int timeFrom;
     private int timeTo;
+    private int batteryIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class BatteryInfoActivity extends AbstractGBActivity {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             gbDevice = bundle.getParcelable(GBDevice.EXTRA_DEVICE);
+            batteryIndex = bundle.getInt(GBDevice.BATTERY_INDEX, 0);
         } else {
             throw new IllegalArgumentException("Must provide a device when invoking this activity");
         }
@@ -55,10 +61,11 @@ public class BatteryInfoActivity extends AbstractGBActivity {
 
         timeTo = (int) (System.currentTimeMillis() / 1000);
 
-        batteryInfoChartFragment.setDateAndGetData(gbDevice, timeFrom, timeTo);
+        batteryInfoChartFragment.setDateAndGetData(gbDevice, batteryIndex, timeFrom, timeTo);
 
         TextView battery_status_device_name_text = (TextView) findViewById(R.id.battery_status_device_name);
         TextView battery_status_battery_voltage = (TextView) findViewById(R.id.battery_status_battery_voltage);
+        TextView battery_status_extra_name = (TextView) findViewById(R.id.battery_status_extra_name);
         final TextView battery_status_date_from_text = (TextView) findViewById(R.id.battery_status_date_from_text);
         final TextView battery_status_date_to_text = (TextView) findViewById(R.id.battery_status_date_to_text);
         final SeekBar battery_status_time_span_seekbar = (SeekBar) findViewById(R.id.battery_status_time_span_seekbar);
@@ -105,7 +112,7 @@ public class BatteryInfoActivity extends AbstractGBActivity {
                 battery_status_time_span_text.setText(text);
                 battery_status_date_from_text.setText(DateTimeUtils.formatDate(new Date(timeFrom * 1000L)));
                 battery_status_date_to_text.setText(DateTimeUtils.formatDate(new Date(timeTo * 1000L)));
-                batteryInfoChartFragment.setDateAndGetData(gbDevice, timeFrom, timeTo);
+                batteryInfoChartFragment.setDateAndGetData(gbDevice, batteryIndex, timeFrom, timeTo);
             }
 
 
@@ -141,7 +148,7 @@ public class BatteryInfoActivity extends AbstractGBActivity {
                             battery_status_time_span_seekbar.setProgress(0);
                             battery_status_time_span_seekbar.setProgress(1);
 
-                            batteryInfoChartFragment.setDateAndGetData(gbDevice, timeFrom, timeTo);
+                            batteryInfoChartFragment.setDateAndGetData(gbDevice, batteryIndex, timeFrom, timeTo);
                         }
                     }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
                 }
@@ -161,6 +168,17 @@ public class BatteryInfoActivity extends AbstractGBActivity {
         battery_status_device_name_text.setText(gbDevice.getName());
         battery_status_battery_level_text.setText(level);
         battery_status_battery_voltage.setText(voltage);
+
+        DeviceCoordinator coordinator = DeviceHelper.getInstance().getCoordinator(gbDevice);
+        for (BatteryConfig batteryConfig : coordinator.getBatteryConfig()) {
+            if (batteryConfig.getBatteryIndex() == batteryIndex) {
+                battery_status_extra_name.setText(batteryConfig.getBatteryLabel());
+                battery_status_device_icon.setImageResource(batteryConfig.getBatteryIcon());
+                if (gbDevice.isInitialized()) {
+                    battery_status_device_icon.setColorFilter(this.getResources().getColor(R.color.accent));
+                }
+            }
+        }
     }
 
 }
