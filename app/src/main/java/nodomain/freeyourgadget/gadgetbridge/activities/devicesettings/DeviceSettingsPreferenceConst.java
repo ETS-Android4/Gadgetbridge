@@ -108,6 +108,8 @@ public class DeviceSettingsPreferenceConst {
     public static final String PREF_GALAXY_BUDS_EQUALIZER_MODE = "pref_galaxy_buds_equalizer_mode";
     public static final String PREF_GALAXY_BUDS_TOUCH_LEFT = "pref_galaxy_buds_touch_left";
     public static final String PREF_GALAXY_BUDS_TOUCH_RIGHT = "pref_galaxy_buds_touch_right";
+    public static final String PREF_GALAXY_BUDS_LIVE_ANC = "pref_galaxy_buds_live_anc";
+    public static final String PREF_GALAXY_BUDS_PRESSURE_RELIEF = "pref_galaxy_buds_live_pressure_relief";
 
     public static final String PREF_SONY_WH1000XM3_AMBIENT_SOUND_CONTROL = "pref_sony_wh1000xm3_ambient_sound_control";
     public static final String PREF_SONY_WH1000XM3_FOCUS_VOICE = "pref_sony_wh1000xm3_focus_voice";
@@ -137,6 +139,11 @@ public class DeviceSettingsPreferenceConst {
     public static final String PREF_SONY_WH1000XM3_TOUCH_SENSOR = "pref_sony_wh1000xm3_touch_sensor";
     public static final String PREF_SONY_WH1000XM3_AUTOMATIC_POWER_OFF = "pref_sony_wh1000xm3_automatic_power_off";
     public static final String PREF_SONY_WH1000XM3_NOTIFICATION_VOICE_GUIDE = "pref_sony_wh1000xm3_notification_voice_guide";
+
+    public static final String PREFS_ACTIVITY_IN_DEVICE_CARD = "prefs_activity_in_device_card";
+    public static final String PREFS_ACTIVITY_IN_DEVICE_CARD_STEPS = "prefs_activity_in_device_card_steps";
+    public static final String PREFS_ACTIVITY_IN_DEVICE_CARD_SLEEP = "prefs_activity_in_device_card_sleep";
+    public static final String PREFS_ACTIVITY_IN_DEVICE_CARD_DISTANCE = "prefs_activity_in_device_card_distance";
 
     public static final String PREF_SOUNDS = "sounds";
     public static final String PREF_AUTH_KEY = "authkey";
