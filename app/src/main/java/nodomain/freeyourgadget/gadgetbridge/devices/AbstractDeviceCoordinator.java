@@ -263,5 +263,8 @@ public abstract class AbstractDeviceCoordinator implements DeviceCoordinator {
         return new BatteryConfig[0];
     }
 
-
+    @Override
+    public boolean supportsNavigation(GBDevice gbDevice) {
+        return false;
+    }
 }

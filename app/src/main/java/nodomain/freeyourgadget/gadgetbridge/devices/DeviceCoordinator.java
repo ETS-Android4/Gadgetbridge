@@ -359,4 +359,5 @@ public interface DeviceCoordinator {
 
     BatteryConfig[] getBatteryConfig();
 
+    boolean supportsNavigation(GBDevice mGBDevice);
 }
