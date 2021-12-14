@@ -141,7 +141,7 @@
     <string name="pref_title_notifications_generic">Generic notification support</string>
     <string name="pref_title_whenscreenon">…also when screen is on</string>
     <string name="pref_title_notification_filter">Do Not Disturb</string>
-    <string name="pref_summary_notification_filter">Unwanted notifications are stopped in this mode</string>
+    <string name="pref_summary_notification_filter">Block all notifications when Do Not Disturb is enabled on the phone</string>
     <string name="pref_header_notification_application_settings">Per application settings</string>
     <string name="pref_title_notification_use_as">Use the Applications list to...</string>
     <string name="pref_title_notification_use_as_deny">Deny notifications from selected apps</string>
@@ -451,8 +451,29 @@
     <string name="control_center_cancel_to_stop_vibration">Cancel to stop vibration.</string>
     <string name="title_activity_charts">Activity and Sleep</string>
     <string name="title_activity_set_alarm">Configure alarms</string>
+    <string name="title_activity_set_reminders">Configure reminders</string>
     <string name="controlcenter_start_configure_alarms">Configure alarms</string>
+    <string name="controlcenter_start_configure_reminders">Configure reminders</string>
+    <string name="reminder_repeat">Repeat</string>
+    <string name="reminder_date">Date</string>
+    <string name="reminder_time">Time</string>
+    <string name="reminder_message">Message</string>
+    <string name="reminder_time_once">%1$s, once</string>
+    <string name="reminder_time_every_day">%1$s, every day</string>
+    <string name="reminder_time_every_week">%1$s, every week</string>
+    <string name="reminder_time_every_month">%1$s, every month</string>
+    <string name="reminder_time_every_year">%1$s, every year</string>
+    <string name="reminder_once">Once</string>
+    <string name="reminder_every_day">Every day</string>
+    <string name="reminder_every_week">Every week</string>
+    <string name="reminder_every_month">Every month</string>
+    <string name="reminder_every_year">Every year</string>
+    <string name="reminder_delete_confirm_title">Delete reminder</string>
+    <string name="reminder_delete_confirm_description">Are you sure you want to delete the reminder?</string>
+    <string name="reminder_no_free_slots_title">No free slots</string>
+    <string name="reminder_no_free_slots_description">The device has no free slots for reminders (total slots: %1$s)</string>
     <string name="title_activity_alarm_details">Alarm details</string>
+    <string name="title_activity_reminder_details">Reminder details</string>
     <string name="alarm_sun_short">Sun</string>
     <string name="alarm_mon_short">Mon</string>
     <string name="alarm_tue_short">Tue</string>
@@ -577,6 +598,8 @@
     <string name="miband_fwinstaller_incompatible_version">Incompatible firmware</string>
     <string name="fwinstaller_firmware_not_compatible_to_device">This firmware is not compatible with the device</string>
     <string name="miband_prefs_reserve_alarm_calendar">Alarms to reserve for upcoming events</string>
+    <string name="miband_prefs_reserve_reminder_calendar">Reminders to reserve for upcoming events</string>
+    <string name="prefs_reserve_reminder_calendar_summary">Number of calendar events that will be synchronized</string>
     <string name="miband_prefs_hr_sleep_detection">Use heart rate sensor to improve sleep detection</string>
     <string name="miband_prefs_device_time_offset_hours">Device time offset in hours (for detecting sleep of shift workers)</string>
     <string name="prefs_find_phone">Find phone</string>
@@ -614,6 +637,7 @@
     <string name="mi2_prefs_inactivity_warnings_dnd_summary">Disable inactivity warnings for a time interval</string>
     <string name="mi2_prefs_do_not_disturb_start">Start time</string>
     <string name="mi2_prefs_do_not_disturb_end">End time</string>
+    <string name="mi2_prefs_do_not_disturb_lift_wrist">Activate display upon lift during Do Not Disturb</string>
     <string name="mi3_prefs_band_screen_unlock">Band screen unlock"</string>
     <string name="mi3_prefs_band_screen_unlock_summary">Swipe up to unlock the band\'s screen</string>
     <string name="mi3_prefs_night_mode">Night mode</string>
@@ -968,6 +992,8 @@
     <string name="pref_invalid_frequency_title">Invalid frequency</string>
     <string name="pref_invalid_frequency_message">Please enter a frequency between 87.5 and 108.0</string>
     <string name="language_and_region_prefs">Language and region settings</string>
+    <string name="prefs_fm_preset_instructions">Long press the button to store preset</string>
+    <string name="prefs_fm_presets_presets">Presets</string>
     <!--Notification Filter Black-/ Whitelist-->
     <string name="title_activity_notification_filter">Notification Filter</string>
     <string name="toast_app_must_not_be_selected">App must not be selected to be configured</string>
@@ -1351,8 +1377,7 @@
     <string name="sony_surround_mode_club">Club</string>
     <string name="sony_surround_mode_outdoor_stage">Outdoor Stage</string>
     <string name="sony_surround_mode_concert_hall">Concert Hall</string>
-    <string name="sony_surround_position_mutually_exclusive">Warning: The sound position / surround mode settings are mutually exclusive.</string>
-    <string name="sony_warn_sbc_codec">Warning: These settings only work for the SBC audio codec.</string>
+    <string name="sony_warn_sbc_codec">Warning: The equalizer, audio position and surround settings only work for the SBC audio codec.</string>
     <string name="sony_equalizer">Equalizer</string>
     <string name="sony_equalizer_preset_off">Off</string>
     <string name="sony_equalizer_preset_bright">Bright</string>
@@ -1384,6 +1409,13 @@
     <string name="sony_automatic_power_off_30_min">30 minutes</string>
     <string name="sony_automatic_power_off_1_hour">1 hour</string>
     <string name="sony_automatic_power_off_3_hour">3 hours</string>
+    <string name="sony_automatic_power_off_when_taken_off">When taken off</string>
     <string name="watchface_widget_type_custom">Custom widget</string>
+    <string name="watchface_dialog_widget_timezone">Time zone:</string>
+    <string name="watchface_dialog_widget_update_timeout">Update timeout in minutes:</string>
+    <string name="watchface_dialog_widget_timeout_hide_text">Hide text on timeout:</string>
+    <string name="watchface_dialog_widget_timeout_show_circle">Show circle on timeout:</string>
+    <string name="qhybrid_title_on_device_confirmation">Enable on-device pairing confirmation</string>
+    <string name="qhybrid_summary_on_device_confirmation">On-device pairing confirmations can get annoying. Disabling them might lose you functionality.</string>
 
 </resources>

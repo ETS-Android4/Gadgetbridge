@@ -62,6 +62,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -110,6 +112,8 @@ import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fos
 import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.application.ApplicationInformation;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.application.ApplicationsListRequest;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.async.ConfirmAppStatusRequest;
+import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.authentication.CheckDeviceNeedsConfirmationRequest;
+import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.authentication.ConfirmOnDeviceRequest;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.authentication.VerifyPrivateKeyRequest;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.buttons.ButtonConfiguration;
 import nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.requests.fossil_hr.buttons.ButtonConfigurationPutRequest;
@@ -211,9 +215,59 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
     private void initializeAfterAuthentication(boolean authenticated) {
         queueWrite(new SetDeviceStateRequest(GBDevice.State.INITIALIZING));
 
-        if (!authenticated)
+        if (!authenticated) {
             GB.toast(getContext().getString(R.string.fossil_hr_auth_failed), Toast.LENGTH_LONG, GB.ERROR);
+            initializeAfterWatchConfirmation(false);
+            return;
+        }
+        boolean shouldAuthenticateOnWatch = getDeviceSpecificPreferences().getBoolean("enable_on_device_confirmation", true);
+        if (!shouldAuthenticateOnWatch) {
+            GB.toast("Skipping on-device confirmation", Toast.LENGTH_SHORT, GB.INFO);
+            initializeAfterWatchConfirmation(false);
+            return;
+        }
+        confirmOnWatch();
+    }
 
+    TimerTask confirmTimeoutRunnable = new TimerTask() {
+        @Override
+        public void run() {
+            if (!(fossilRequest instanceof ConfirmOnDeviceRequest)) {
+                return;
+            }
+            GB.toast("Confirmation timeout, continuing", Toast.LENGTH_SHORT, GB.INFO);
+            ((ConfirmOnDeviceRequest) fossilRequest).onResult(false);
+        }
+    };
+
+    private void confirmOnWatch() {
+        queueWrite(new CheckDeviceNeedsConfirmationRequest() {
+            @Override
+            public void onResult(boolean needsConfirmation) {
+                GB.log("needs confirmation: " + needsConfirmation, GB.INFO, null);
+                if (needsConfirmation) {
+                    final Timer timer = new Timer();
+                    GB.toast("please confirm on device.", Toast.LENGTH_SHORT, GB.INFO);
+                    queueWrite(new ConfirmOnDeviceRequest() {
+                        @Override
+                        public void onResult(boolean confirmationSuccess) {
+                            isFinished = true;
+                            timer.cancel();
+                            if (!confirmationSuccess) {
+                                GB.toast("connection unconfirmed on watch, unauthenticated mode", Toast.LENGTH_LONG, GB.ERROR);
+                            }
+                            initializeAfterWatchConfirmation(confirmationSuccess);
+                        }
+                    }, true);
+                    timer.schedule(confirmTimeoutRunnable, 30000);
+                } else {
+                    initializeAfterWatchConfirmation(true);
+                }
+            }
+        });
+    }
+
+    private void initializeAfterWatchConfirmation(boolean authenticated) {
         setNotificationConfigurations();
         setQuickRepliesConfiguration();
 
@@ -294,9 +348,9 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
         // Set default icons
         ArrayList<NotificationImage> images = new ArrayList<>();
         images.add(new NotificationImage("icIncomingCall.icon", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_phone_outline)), 24, 24));
-        images.add(new NotificationImage("icMissedCall.icon", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_phone_missed_outline)), 24,24));
-        images.add(new NotificationImage("icMessage.icon", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_message_outline)),24,24));
-        images.add(new NotificationImage("general_white.bin", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_alert_circle_outline)),24,24));
+        images.add(new NotificationImage("icMissedCall.icon", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_phone_missed_outline)), 24, 24));
+        images.add(new NotificationImage("icMessage.icon", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_message_outline)), 24, 24));
+        images.add(new NotificationImage("general_white.bin", NotificationImage.getEncodedIconFromDrawable(getContext().getResources().getDrawable(R.drawable.ic_alert_circle_outline)), 24, 24));
 
         // Set default notification filters
         ArrayList<NotificationHRConfiguration> notificationFilters = new ArrayList<>();
@@ -326,7 +380,7 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
     private String[] getQuickReplies() {
         ArrayList<String> configuredReplies = new ArrayList<>();
         Prefs prefs = new Prefs(getDeviceSpecificPreferences());
-        for (int i=1; i<=16; i++) {
+        for (int i = 1; i <= 16; i++) {
             String quickReply = prefs.getString("canned_message_dismisscall_" + i, null);
             if (quickReply != null) {
                 configuredReplies.add(quickReply);
@@ -1030,14 +1084,14 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
             for (NotificationHRConfiguration configuration : this.notificationConfigurations) {
                 if (configuration.getPackageName().equals(sourceAppId)) {
                     LOG.info("Package found in notificationConfigurations, using custom icon: " + sourceAppId);
-                    queueWrite(new PlayTextNotificationRequest(sourceAppId, senderOrTitle, notificationSpec.body, notificationSpec.getId(), this));
+                    queueWrite(new PlayTextNotificationRequest(sourceAppId, senderOrTitle, notificationSpec, this));
                     packageFound = true;
                 }
             }
 
-            if(!packageFound) {
+            if (!packageFound) {
                 LOG.info("Package not found in notificationConfigurations, using generic icon: " + sourceAppId);
-                queueWrite(new PlayTextNotificationRequest("generic", senderOrTitle, notificationSpec.body, notificationSpec.getId(), this));
+                queueWrite(new PlayTextNotificationRequest("generic", senderOrTitle, notificationSpec, this));
             }
         } catch (Exception e) {
             LOG.error("Error while forwarding notification", e);
@@ -1224,22 +1278,23 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
 
     @Override
     public void onTestNewFunction() {
+        queueWrite(new FossilRequest() {
+            @Override
+            public boolean isFinished() {
+                return true;
+            }
 
-        try{
-            JSONObject data = new JSONObject()
-                    .put("push", new JSONObject()
-                            .put("set", new JSONObject()
-                                    .put("widgetCustom0._.config.upper_text", "0 up")
-                                    .put("widgetCustom0._.config.lower_text", "0 low")
+            @Override
+            public byte[] getStartSequence() {
+                return new byte[]{0x01, 0x07};
+            }
 
-                                    .put("widgetCustom1._.config.upper_text", "1 up")
-                                    .put("widgetCustom1._.config.lower_text", "1 low")
-                            )
-                    );
-            queueWrite(new JsonPutRequest(data, this));
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public UUID getRequestUUID() {
+                return UUID.fromString("3dda0005-957f-7d4a-34a6-74696673696d");
+            }
+        });
+        queueWrite(new ConfirmOnDeviceRequest());
     }
 
     public byte[] getSecretKey() throws IllegalAccessException {
@@ -1263,7 +1318,7 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
     }
 
     @Override
-    public void pushConfigJson(String configJson){
+    public void pushConfigJson(String configJson) {
         configJson = configJson.replace("\n", "");
         queueWrite(new JsonPutRequest(configJson, this));
     }
@@ -1480,6 +1535,14 @@ public class FossilHRWatchAdapter extends FossilWatchAdapter {
             } catch (JSONException e) {
                 LOG.error("Error while handling received characteristic", e);
             }
+        }
+    }
+
+    @Override
+    public void onFindDevice(boolean start) {
+        super.onFindDevice(start);
+        if (start) {
+            queueWrite(new ConfirmOnDeviceRequest());
         }
     }
 

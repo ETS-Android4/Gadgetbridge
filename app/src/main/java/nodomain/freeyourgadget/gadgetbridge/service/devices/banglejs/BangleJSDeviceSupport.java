@@ -153,7 +153,7 @@ public class BangleJSDeviceSupport extends AbstractBTLEDeviceSupport {
     private void handleUartRxLine(String line) {
         LOG.info("UART RX LINE: " + line);
 
-        if (">Uncaught ReferenceError: \"gb\" is not defined".equals(line))
+        if (">Uncaught ReferenceError: \"GB\" is not defined".equals(line))
           GB.toast(getContext(), "Gadgetbridge plugin not installed on Bangle.js", Toast.LENGTH_LONG, GB.ERROR);
         else if (line.charAt(0)=='{') {
             // JSON - we hope!
@@ -412,8 +412,11 @@ public class BangleJSDeviceSupport extends AbstractBTLEDeviceSupport {
         try {
             JSONObject o = new JSONObject();
             o.put("t", "musicstate");
+            int musicState = stateSpec.state;
             String[] musicStates = {"play", "pause", "stop", ""};
-            o.put("state", musicStates[stateSpec.state]);
+            if (musicState<0) musicState=3;
+            if (musicState>=musicStates.length) musicState = musicStates.length-1;
+            o.put("state", musicStates[musicState]);
             o.put("position", stateSpec.position);
             o.put("shuffle", stateSpec.shuffle);
             o.put("repeat", stateSpec.repeat);
@@ -630,15 +633,14 @@ public class BangleJSDeviceSupport extends AbstractBTLEDeviceSupport {
                 return bitmapDrawable.getBitmap();
             }
         }
-        int w = 1;
-        int h = 8;
+        int w = 24;
+        int h = 24;
         if (drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0) {
-
-        } else {
             w = drawable.getIntrinsicWidth();
             h = drawable.getIntrinsicHeight();
-            if (w>64) w=64;
-            if (h>64) h=64;
+            // don't allocate anything too big
+            if (w>24) w=24;
+            if (h>24) h=24;
         }
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
 

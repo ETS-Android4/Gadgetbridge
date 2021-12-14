@@ -31,6 +31,7 @@ import nodomain.freeyourgadget.gadgetbridge.model.MusicSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.MusicStateSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.NavigationInfoSpec;
 import nodomain.freeyourgadget.gadgetbridge.model.NotificationSpec;
+import nodomain.freeyourgadget.gadgetbridge.model.Reminder;
 import nodomain.freeyourgadget.gadgetbridge.model.WeatherSpec;
 
 /**
@@ -46,6 +47,8 @@ public interface EventHandler {
     void onSetTime();
 
     void onSetAlarms(ArrayList<? extends Alarm> alarms);
+
+    void onSetReminders(ArrayList<? extends Reminder> reminders);
 
     void onSetCallState(CallSpec callSpec);
 

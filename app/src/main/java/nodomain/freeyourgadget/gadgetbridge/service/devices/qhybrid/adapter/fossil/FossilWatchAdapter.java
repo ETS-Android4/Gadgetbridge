@@ -91,7 +91,7 @@ import static nodomain.freeyourgadget.gadgetbridge.service.devices.qhybrid.QHybr
 public class FossilWatchAdapter extends WatchAdapter {
     private ArrayList<Request> requestQueue = new ArrayList<>();
 
-    private FossilRequest fossilRequest;
+    protected FossilRequest fossilRequest;
 
     private int MTU = 23;
 
@@ -169,6 +169,7 @@ public class FossilWatchAdapter extends WatchAdapter {
                 requestQueue.clear();
             }
             log("characteristic write failed: " + status);
+            GB.toast(fossilRequest.getName() + " characteristic write failed: " + status, Toast.LENGTH_SHORT, GB.ERROR);
             fossilRequest = null;
 
             queueNextRequest();
@@ -583,7 +584,7 @@ public class FossilWatchAdapter extends WatchAdapter {
                         requestFinished = fossilRequest.isFinished();
                     } catch (RuntimeException e) {
                         if (characteristic.getUuid().toString().equals("3dda0005-957f-7d4a-34a6-74696673696d")) {
-                            GB.log("authentication failed", GB.ERROR, null);
+                            GB.log("authentication failed", GB.ERROR, e);
                             // setDeviceState(GBDevice.State.AUTHENTICATION_REQUIRED);
                         }else {
                             GB.log("error", GB.ERROR, e);

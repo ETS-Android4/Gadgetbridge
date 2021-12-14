@@ -309,6 +309,12 @@ public abstract class HuamiCoordinator extends AbstractDeviceCoordinator {
         return DoNotDisturb.OFF;
     }
 
+    public static boolean getDoNotDisturbLiftWrist(String deviceAddress) {
+        SharedPreferences prefs = GBApplication.getDeviceSpecificSharedPrefs(deviceAddress);
+
+        return prefs.getBoolean(MiBandConst.PREF_DO_NOT_DISTURB_LIFT_WRIST, false);
+    }
+
     @Override
     public boolean supportsScreenshots() {
         return false;
@@ -327,5 +333,15 @@ public abstract class HuamiCoordinator extends AbstractDeviceCoordinator {
     @Override
     public boolean supportsAlarmSnoozing() {
         return true;
+    }
+
+    @Override
+    public int getMaximumReminderMessageLength() {
+        return 16;
+    }
+
+    @Override
+    public int getReminderSlotCount() {
+        return 22; // At least, Mi Fit still allows more
     }
 }

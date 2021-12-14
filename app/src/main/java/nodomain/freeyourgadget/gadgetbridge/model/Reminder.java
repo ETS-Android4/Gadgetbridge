@@ -1,4 +1,4 @@
-/*  Copyright (C) 2021 José Rebelo
+/*  Copyright (C) 2019 José Rebelo
 
     This file is part of Gadgetbridge.
 
@@ -14,11 +14,25 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-package nodomain.freeyourgadget.gadgetbridge.devices.sony.wh1000xm3;
+package nodomain.freeyourgadget.gadgetbridge.model;
 
-public enum AmbientSoundControl {
-    OFF,
-    NOISE_CANCELLING,
-    WIND_NOISE_REDUCTION,
-    AMBIENT_SOUND
+import java.io.Serializable;
+import java.util.Date;
+
+public interface Reminder extends Serializable {
+    /**
+     * The {@link android.os.Bundle} name for transferring parceled reminders.
+     */
+    String EXTRA_REMINDER = "reminder";
+
+    int ONCE = 0;
+    int EVERY_DAY = 1;
+    int EVERY_WEEK = 2;
+    int EVERY_MONTH = 3;
+    int EVERY_YEAR = 4;
+
+    String getReminderId();
+    String getMessage();
+    Date getDate();
+    int getRepetition();
 }

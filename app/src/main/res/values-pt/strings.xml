@@ -222,8 +222,23 @@
     <string name="control_center_cancel_to_stop_vibration">Cancele para parar a vibração.</string>
     <string name="title_activity_charts">Atividade e sono</string>
     <string name="title_activity_set_alarm">Configurar alarmes</string>
+    <string name="title_activity_set_reminders">Configurar Lembretes</string>
     <string name="controlcenter_start_configure_alarms">Configurar alarmes</string>
+    <string name="controlcenter_start_configure_reminders">Configurar lembretes</string>
     <string name="title_activity_alarm_details">Detalhes do alarme</string>
+    <string name="title_activity_reminder_details">Detalhes do lembrete</string>
+    <string name="reminder_time_once">%1$s, uma vez</string>
+    <string name="reminder_time_every_day">%1$s, todos os dias</string>
+    <string name="reminder_time_every_week">%1$s, todas as semanas</string>
+    <string name="reminder_time_every_month">%1$s, todos os meses</string>
+    <string name="reminder_time_every_year">%1$s, todos os anos</string>
+    <string name="reminder_once">Uma vez</string>
+    <string name="reminder_every_day">Todos os dias</string>
+    <string name="reminder_every_week">Todas as semanas</string>
+    <string name="reminder_every_month">Todos os meses</string>
+    <string name="reminder_every_year">Todos os anos</string>
+    <string name="reminder_delete_confirm_title">Apagar lembrete</string>
+    <string name="reminder_delete_confirm_description">De certeza que pretende apagar o lembrete?</string>
     <string name="alarm_sun_short">Dom</string>
     <string name="alarm_mon_short">Seg</string>
     <string name="alarm_tue_short">Ter</string>
@@ -1187,8 +1202,7 @@
     <string name="sony_surround_mode_club">Discoteca</string>
     <string name="sony_surround_mode_outdoor_stage">Palco exterior</string>
     <string name="sony_surround_mode_concert_hall">Sala de concertos</string>
-    <string name="sony_surround_position_mutually_exclusive">Aviso: As preferencias de posição de som / modo surround são mutuamente exclusivas.</string>
-    <string name="sony_warn_sbc_codec">Aviso: Estas preferencias só funcionam com o codec de audio SBC.</string>
+    <string name="sony_warn_sbc_codec">Aviso: As preferencias de equalizador, modo surround e posição do som só funcionam com o codec de audio SBC.</string>
     <string name="sony_equalizer">Equalizador</string>
     <string name="sony_equalizer_preset_off">Desligado</string>
     <string name="sony_equalizer_preset_bright">Brilhante</string>
@@ -1220,6 +1234,7 @@
     <string name="sony_automatic_power_off_30_min">30 minutos</string>
     <string name="sony_automatic_power_off_1_hour">1 hora</string>
     <string name="sony_automatic_power_off_3_hour">3 horas</string>
+    <string name="sony_automatic_power_off_when_taken_off">Quando retirar os auscultadores</string>
     <string name="uncheck_all_applications">Desmarcar todos as aplicações</string>
     <string name="fw_upgrade_notice_amazfitx">Está prestes a instalar o firmware %s no seu Amazfit X.
 \n

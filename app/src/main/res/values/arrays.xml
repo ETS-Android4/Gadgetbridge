@@ -460,6 +460,7 @@
         <item>@string/menuitem_spo2</item>
         <item>@string/menuitem_breathing</item>
         <item>@string/menuitem_flashlight</item>
+        <item>@string/menuitem_alipay</item>
     </string-array>
 
     <string-array name="pref_miband6_display_items_values">
@@ -486,6 +487,7 @@
         <item>@string/p_menuitem_spo2</item>
         <item>@string/p_menuitem_breathing</item>
         <item>@string/p_menuitem_flashlight</item>
+        <item>@string/p_menuitem_alipay</item>
     </string-array>
 
     <string-array name="pref_miband6_display_items_default">
@@ -536,6 +538,7 @@
         <item>@string/menuitem_spo2</item>
         <item>@string/menuitem_breathing</item>
         <item>@string/menuitem_flashlight</item>
+        <item>@string/menuitem_alipay</item>
     </string-array>
 
     <string-array name="pref_miband6_shortcuts_values">
@@ -560,6 +563,7 @@
         <item>@string/p_menuitem_spo2</item>
         <item>@string/p_menuitem_breathing</item>
         <item>@string/p_menuitem_flashlight</item>
+        <item>@string/p_menuitem_alipay</item>
     </string-array>
 
     <string-array name="pref_miband6_shortcuts_default">
@@ -910,6 +914,86 @@
         <item>@string/p_menuitem_compass</item>
         <item>@string/p_menuitem_temperature</item>
         <item>@string/p_menuitem_widgets</item>
+        <item>@string/p_menuitem_settings</item>
+        <item>@string/p_menuitem_more</item>
+    </string-array>
+
+    <string-array name="pref_gts2mini_display_items">
+        <item>@string/menuitem_goal</item>
+        <item>@string/menuitem_hr</item>
+        <item>@string/menuitem_pai</item>
+        <item>@string/menuitem_workout</item>
+        <item>@string/menuitem_activity</item>
+        <item>@string/menuitem_sleep</item>
+        <item>@string/menuitem_weather</item>
+        <item>@string/menuitem_alarm</item>
+        <item>@string/menuitem_eventreminder</item>
+        <item>@string/menuitem_stopwatch</item>
+        <item>@string/menuitem_timer</item>
+        <item>@string/menuitem_breathing</item>
+        <item>@string/menuitem_stress</item>
+        <item>@string/menuitem_spo2</item>
+        <item>@string/menuitem_worldclock</item>
+        <item>@string/menuitem_pomodoro</item>
+        <item>@string/menuitem_music</item>
+        <item>@string/menuitem_cycles</item>
+        <item>@string/menuitem_compass</item>
+        <item>@string/menuitem_findphone</item>
+        <item>@string/menuitem_takephoto</item>
+        <item>@string/menuitem_alexa</item>
+        <item>@string/menuitem_settings</item>
+        <item>@string/menuitem_more</item>
+    </string-array>
+
+    <string-array name="pref_gts2mini_display_items_values">
+        <item>@string/p_menuitem_goal</item>
+        <item>@string/p_menuitem_hr</item>
+        <item>@string/p_menuitem_pai</item>
+        <item>@string/p_menuitem_workout</item>
+        <item>@string/p_menuitem_activity</item>
+        <item>@string/p_menuitem_sleep</item>
+        <item>@string/p_menuitem_weather</item>
+        <item>@string/p_menuitem_alarm</item>
+        <item>@string/p_menuitem_eventreminder</item>
+        <item>@string/p_menuitem_stopwatch</item>
+        <item>@string/p_menuitem_timer</item>
+        <item>@string/p_menuitem_breathing</item>
+        <item>@string/p_menuitem_stress</item>
+        <item>@string/p_menuitem_spo2</item>
+        <item>@string/p_menuitem_worldclock</item>
+        <item>@string/p_menuitem_pomodoro</item>
+        <item>@string/p_menuitem_music</item>
+        <item>@string/p_menuitem_cycles</item>
+        <item>@string/p_menuitem_compass</item>
+        <item>@string/p_menuitem_findphone</item>
+        <item>@string/p_menuitem_takephoto</item>
+        <item>@string/p_menuitem_alexa</item>
+        <item>@string/p_menuitem_settings</item>
+        <item>@string/p_menuitem_more</item>
+    </string-array>
+
+    <string-array name="pref_gts2mini_display_items_default">
+        <item>@string/p_menuitem_goal</item>
+        <item>@string/p_menuitem_hr</item>
+        <item>@string/p_menuitem_pai</item>
+        <item>@string/p_menuitem_workout</item>
+        <item>@string/p_menuitem_activity</item>
+        <item>@string/p_menuitem_sleep</item>
+        <item>@string/p_menuitem_weather</item>
+        <item>@string/p_menuitem_alarm</item>
+        <item>@string/p_menuitem_eventreminder</item>
+        <item>@string/p_menuitem_stopwatch</item>
+        <item>@string/p_menuitem_timer</item>
+        <item>@string/p_menuitem_breathing</item>
+        <item>@string/p_menuitem_stress</item>
+        <item>@string/p_menuitem_spo2</item>
+        <item>@string/p_menuitem_worldclock</item>
+        <item>@string/p_menuitem_pomodoro</item>
+        <item>@string/p_menuitem_music</item>
+        <item>@string/p_menuitem_cycles</item>
+        <item>@string/p_menuitem_compass</item>
+        <item>@string/p_menuitem_findphone</item>
+        <item>@string/p_menuitem_takephoto</item>
         <item>@string/p_menuitem_settings</item>
         <item>@string/p_menuitem_more</item>
     </string-array>
@@ -1486,6 +1570,14 @@
         <item>1800</item>
     </string-array>
 
+    <string-array name="reminder_repeat">
+        <item>@string/reminder_once</item>
+        <item>@string/reminder_every_day</item>
+        <item>@string/reminder_every_week</item>
+        <item>@string/reminder_every_month</item>
+        <item>@string/reminder_every_year</item>
+    </string-array>
+
     <string-array name="notification_filter_modes_entries">
         <item>@string/filter_mode_none</item>
         <item>@string/filter_mode_whitelist</item>
@@ -1853,21 +1945,21 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_ambient_sound_control_names">
+    <string-array name="sony_ambient_sound_control_names">
         <item>@string/sony_ambient_sound_off</item>
         <item>@string/sony_ambient_sound_noise_cancelling</item>
         <item>@string/sony_ambient_sound_wind_noise_reduction</item>
         <item>@string/sony_ambient_sound_ambient_sound</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_ambient_sound_control_values">
+    <string-array name="sony_ambient_sound_control_values">
         <item>off</item>
         <item>noise_cancelling</item>
         <item>wind_noise_reduction</item>
         <item>ambient_sound</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_sound_position_names">
+    <string-array name="sony_sound_position_names">
         <item>@string/sony_sound_position_off</item>
         <item>@string/sony_sound_position_front</item>
         <item>@string/sony_sound_position_front_left</item>
@@ -1876,7 +1968,7 @@
         <item>@string/sony_sound_position_rear_right</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_sound_position_values">
+    <string-array name="sony_sound_position_values">
         <item>off</item>
         <item>front</item>
         <item>front_left</item>
@@ -1885,7 +1977,7 @@
         <item>rear_right</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_surround_mode_names">
+    <string-array name="sony_surround_mode_names">
         <item>@string/sony_surround_mode_off</item>
         <item>@string/sony_surround_mode_arena</item>
         <item>@string/sony_surround_mode_club</item>
@@ -1893,7 +1985,7 @@
         <item>@string/sony_surround_mode_concert_hall</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_surround_mode_values">
+    <string-array name="sony_surround_mode_values">
         <item>off</item>
         <item>arena</item>
         <item>club</item>
@@ -1901,7 +1993,7 @@
         <item>concert_hall</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_equalizer_mode_names">
+    <string-array name="sony_equalizer_mode_names">
         <item>@string/sony_equalizer_preset_off</item>
         <item>@string/sony_equalizer_preset_bright</item>
         <item>@string/sony_equalizer_preset_excited</item>
@@ -1916,7 +2008,7 @@
         <item>@string/sony_equalizer_preset_custom_2</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_equalizer_mode_values">
+    <string-array name="sony_equalizer_mode_values">
         <item>off</item>
         <item>bright</item>
         <item>excited</item>
@@ -1931,7 +2023,7 @@
         <item>custom_2</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_automatic_power_off_names">
+    <string-array name="sony_automatic_power_off_names">
         <item>@string/sony_automatic_power_off_off</item>
         <item>@string/sony_automatic_power_off_5_min</item>
         <item>@string/sony_automatic_power_off_30_min</item>
@@ -1939,7 +2031,7 @@
         <item>@string/sony_automatic_power_off_3_hour</item>
     </string-array>
 
-    <string-array name="sony_wh1000xm3_automatic_power_off_values">
+    <string-array name="sony_automatic_power_off_values">
         <item>off</item>
         <item>after_5_min</item>
         <item>after_30_min</item>

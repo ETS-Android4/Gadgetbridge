@@ -32,6 +32,7 @@ import java.util.Collection;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import nodomain.freeyourgadget.gadgetbridge.GBException;
+import nodomain.freeyourgadget.gadgetbridge.activities.devicesettings.DeviceSpecificSettingsCustomizer;
 import nodomain.freeyourgadget.gadgetbridge.entities.DaoSession;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDevice;
 import nodomain.freeyourgadget.gadgetbridge.impl.GBDeviceCandidate;
@@ -143,6 +144,8 @@ public interface DeviceCoordinator {
     /**
      * Returns true if activity data fetching is supported by the device
      * (with this coordinator).
+     * This enables the sync button in control center and the device can thus be asked to send the data
+     * (as opposed the device pushing the data to us by itself)
      *
      * @return
      */
@@ -151,6 +154,7 @@ public interface DeviceCoordinator {
     /**
      * Returns true if activity tracking is supported by the device
      * (with this coordinator).
+     * This enables the ChartsActivity.
      *
      * @return
      */
@@ -318,6 +322,16 @@ public interface DeviceCoordinator {
     boolean supportsMusicInfo();
 
     /**
+     * Indicates the maximum reminder message length.
+     */
+    int getMaximumReminderMessageLength();
+
+    /**
+     * Indicates the maximum number of reminder slots available in the device.
+     */
+    int getReminderSlotCount();
+
+    /**
      * Indicates whether the device has an led which supports custom colors
      */
     boolean supportsLedColor();
@@ -343,6 +357,11 @@ public interface DeviceCoordinator {
      * Indicates which device specific settings the device supports (not per device type or family, but unique per device).
      */
     int[] getSupportedDeviceSpecificSettings(GBDevice device);
+
+    /**
+     * Returns the {@link DeviceSpecificSettingsCustomizer}, allowing for the customization of the devices specific settings screen.
+     */
+    DeviceSpecificSettingsCustomizer getDeviceSpecificSettingsCustomizer(GBDevice device);
 
     /**
      * Indicates which device specific language the device supports
