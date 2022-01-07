@@ -234,7 +234,7 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
     private boolean heartRateNotifyEnabled;
     private int mMTU = 23;
     protected int mActivitySampleSize = 4;
-    private boolean force2021Protocol = false;
+    protected boolean force2021Protocol = false;
     private HuamiChunked2021Decoder huamiChunked2021Decoder;
     public HuamiSupport() {
         this(LOG);

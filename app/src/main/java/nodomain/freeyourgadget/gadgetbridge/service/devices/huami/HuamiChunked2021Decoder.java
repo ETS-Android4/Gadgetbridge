@@ -46,6 +46,13 @@ public class HuamiChunked2021Decoder {
         }
 
         byte flags = data[i++];
+        if ((flags & 0x08) == 0x08) {
+            LOG.debug("encrypted data not supported yet");
+            return;
+        }
+        if (huamiSupport.force2021Protocol) {
+            i++; // skip extended header
+        }
         byte handle = data[i++];
         if (currentHandle != null && currentHandle != handle) {
             LOG.debug("ignoring handle " + handle + ", expected " + currentHandle);
@@ -62,12 +69,12 @@ public class HuamiChunked2021Decoder {
         reassemblyBuffer.put(data, i, data.length - i);
         if ((flags & 0x02) == 0x02) { // end
             if (currentType == 0x0013) {
-                LOG.debug("got command for SMS replay");
+                LOG.debug("got command for SMS reply");
                 byte[] buf = reassemblyBuffer.array();
                 if (buf[0] == 0x0d) {
                     try {
                         TransactionBuilder builder = huamiSupport.performInitialized("allow sms reply");
-                        huamiSupport.writeToChunked2021(builder, (short) 0x0013, huamiSupport.getNextHandle(), new byte[]{(byte) 0x0e, 0x01}, false, false);
+                        huamiSupport.writeToChunked2021(builder, (short) 0x0013, huamiSupport.getNextHandle(), new byte[]{(byte) 0x0e, 0x01}, huamiSupport.force2021Protocol, false);
                         builder.queue(huamiSupport.getQueue());
                     } catch (IOException e) {
                         LOG.error("Unable to allow sms reply");
