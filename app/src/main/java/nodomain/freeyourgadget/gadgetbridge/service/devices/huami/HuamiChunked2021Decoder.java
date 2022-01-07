@@ -78,7 +78,6 @@ public class HuamiChunked2021Decoder {
                         builder.queue(huamiSupport.getQueue());
                     } catch (IOException e) {
                         LOG.error("Unable to allow sms reply");
-
                     }
                 } else if (buf[0] == 0x0b) {
                     String phoneNumber = null;
@@ -99,6 +98,14 @@ public class HuamiChunked2021Decoder {
                         devEvtNotificationControl.reply = smsReply;
                         devEvtNotificationControl.event = GBDeviceEventNotificationControl.Event.REPLY;
                         huamiSupport.evaluateGBDeviceEvent(devEvtNotificationControl);
+                        try {
+                            TransactionBuilder builder = huamiSupport.performInitialized("ack sms reply");
+                            byte[] ackSentCommand = new byte[]{0x0c, 0x01};
+                            huamiSupport.writeToChunked2021(builder, (short) 0x0013, huamiSupport.getNextHandle(), ackSentCommand, huamiSupport.force2021Protocol, false);
+                            builder.queue(huamiSupport.getQueue());
+                        } catch (IOException e) {
+                            LOG.error("Unable to ack sms reply");
+                        }
                     }
                 }
             }
