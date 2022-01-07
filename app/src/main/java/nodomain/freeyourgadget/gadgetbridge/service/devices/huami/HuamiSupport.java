@@ -235,7 +235,7 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
     private int mMTU = 23;
     protected int mActivitySampleSize = 4;
     private boolean force2021Protocol = false;
-
+    private HuamiChunked2021Decoder huamiChunked2021Decoder;
     public HuamiSupport() {
         this(LOG);
     }
@@ -266,8 +266,11 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
             heartRateNotifyEnabled = false;
             boolean authenticate = needsAuth && (cryptFlags == 0x00);
             needsAuth = false;
-            characteristicChunked2021Write = getCharacteristic(HuamiService.UUID_CHARACTERISTIC_CHUNKEDTRANSFER_2021_WRITE);
             characteristicChunked2021Read = getCharacteristic(HuamiService.UUID_CHARACTERISTIC_CHUNKEDTRANSFER_2021_READ);
+            if (characteristicChunked2021Read != null) {
+                huamiChunked2021Decoder = new HuamiChunked2021Decoder(this);
+            }
+            characteristicChunked2021Write = getCharacteristic(HuamiService.UUID_CHARACTERISTIC_CHUNKEDTRANSFER_2021_WRITE);
             if (characteristicChunked2021Write != null && GBApplication.getDeviceSpecificSharedPrefs(gbDevice.getAddress()).getBoolean("force_new_protocol", false)) {
                 force2021Protocol = true;
                 new InitOperation2021(authenticate, authFlags, cryptFlags, this, builder).perform();
@@ -386,6 +389,9 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
         builder.notify(getCharacteristic(HuamiService.UUID_CHARACTERISTIC_AUDIO), enable);
         builder.notify(getCharacteristic(HuamiService.UUID_CHARACTERISTIC_AUDIODATA), enable);
         builder.notify(getCharacteristic(HuamiService.UUID_CHARACTERISTIC_DEVICEEVENT), enable);
+        if (characteristicChunked2021Read != null) {
+            builder.notify(characteristicChunked2021Read, enable);
+        }
 
         return this;
     }
@@ -968,12 +974,20 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
     public void onSetCallStateNew(CallSpec callSpec) {
         if (callSpec.command == CallSpec.CALL_INCOMING) {
             byte[] message = NotificationUtils.getPreferredTextFor(callSpec).getBytes();
-            int length = 10 + message.length;
+            int phoneNumberLength = 0;
+            if (callSpec.number != null && !callSpec.number.equals("")) {
+                phoneNumberLength = callSpec.number.getBytes().length;
+            }
+            int length = 10 + message.length + phoneNumberLength;
             ByteBuffer buf = ByteBuffer.allocate(length);
             buf.order(ByteOrder.LITTLE_ENDIAN);
             buf.put(new byte[]{3, 0, 0, 0, 0, 0});
             buf.put(message);
-            buf.put(new byte[]{0, 0, 0, 2});
+            buf.put(new byte[]{0, 0, 0});
+            if (phoneNumberLength > 0) {
+                buf.put(callSpec.number.getBytes());
+            }
+            buf.put((byte) 0);
             try {
                 TransactionBuilder builder = performInitialized("incoming call");
                 writeToChunked(builder, 0, buf.array());
@@ -1007,6 +1021,7 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
         if (cannedMessagesSpec.type == CannedMessagesSpec.TYPE_REJECTEDCALLS) {
             try {
                 TransactionBuilder builder = performInitialized("Set canned messages");
+                writeToChunked2021(builder, (short) 0x0013, getNextHandle(), new byte[]{(byte) 0x0e, 0x01}, false, false);
 
                 int handle = 0x12345678;
                 for (String cannedMessage : cannedMessagesSpec.cannedMessages) {
@@ -1705,6 +1720,9 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
             return true;
         } else if (HuamiService.UUID_CHARACTERISTIC_3_CONFIGURATION.equals(characteristicUUID)) {
             handleConfigurationInfo(characteristic.getValue());
+            return true;
+        } else if (HuamiService.UUID_CHARACTERISTIC_CHUNKEDTRANSFER_2021_READ.equals(characteristicUUID) && huamiChunked2021Decoder != null) {
+            huamiChunked2021Decoder.decode(characteristic.getValue());
             return true;
         } else {
             LOG.info("Unhandled characteristic changed: " + characteristicUUID);
