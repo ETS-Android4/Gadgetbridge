@@ -1021,19 +1021,23 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
         if (cannedMessagesSpec.type == CannedMessagesSpec.TYPE_REJECTEDCALLS) {
             try {
                 TransactionBuilder builder = performInitialized("Set canned messages");
-                writeToChunked2021(builder, (short) 0x0013, getNextHandle(), new byte[]{(byte) 0x0e, 0x01}, false, false);
-
                 int handle = 0x12345678;
+
+                for (int i = 0; i < 16; i++) {
+                    byte[] delete_command = new byte[]{0x07, (byte) (handle & 0xff), (byte) ((handle & 0xff00) >> 8), (byte) ((handle & 0xff0000) >> 16), (byte) ((handle & 0xff000000) >> 24)};
+                    writeToChunked2021(builder, (short) 0x0013, getNextHandle(), delete_command, force2021Protocol, false);
+                    handle++;
+                }
+                handle = 0x12345678;
                 for (String cannedMessage : cannedMessagesSpec.cannedMessages) {
-                    int length = cannedMessage.getBytes().length + 5;
+                    int length = cannedMessage.getBytes().length + 6;
                     ByteBuffer buf = ByteBuffer.allocate(length);
                     buf.order(ByteOrder.LITTLE_ENDIAN);
-
                     buf.put((byte) 0x05); // create
                     buf.putInt(handle++);
                     buf.put(cannedMessage.getBytes());
-
-                    writeToChunked2021(builder, (short) 0x0013, getNextHandle(), buf.array(), false, false);
+                    buf.put((byte) 0x00);
+                    writeToChunked2021(builder, (short) 0x0013, getNextHandle(), buf.array(), force2021Protocol, false);
                 }
                 builder.queue(getQueue());
             } catch (IOException ex) {

@@ -74,6 +74,7 @@ public class MiBand6Coordinator extends HuamiCoordinator {
     public int[] getSupportedDeviceSpecificSettings(GBDevice device) {
         return new int[]{
                 R.xml.devicesettings_miband6,
+                R.xml.devicesettings_canned_dismisscall_16,
                 R.xml.devicesettings_wearlocation,
                 R.xml.devicesettings_custom_emoji_font,
                 R.xml.devicesettings_timeformat,
