@@ -973,18 +973,22 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
 
     public void onSetCallStateNew(CallSpec callSpec) {
         if (callSpec.command == CallSpec.CALL_INCOMING) {
-            byte[] message = NotificationUtils.getPreferredTextFor(callSpec).getBytes();
             int phoneNumberLength = 0;
             if (callSpec.number != null && !callSpec.number.equals("")) {
                 phoneNumberLength = callSpec.number.getBytes().length;
             }
-            int length = 10 + message.length + phoneNumberLength;
+
+            byte[] message = NotificationUtils.getPreferredTextFor(callSpec).getBytes();
+            int length = 7 + message.length + phoneNumberLength;
+            if (phoneNumberLength > 0) {
+                length += 3;
+            }
             ByteBuffer buf = ByteBuffer.allocate(length);
             buf.order(ByteOrder.LITTLE_ENDIAN);
             buf.put(new byte[]{3, 0, 0, 0, 0, 0});
             buf.put(message);
-            buf.put(new byte[]{0, 0, 0});
             if (phoneNumberLength > 0) {
+                buf.put(new byte[]{0, 0, 0});
                 buf.put(callSpec.number.getBytes());
             }
             buf.put((byte) 0);
