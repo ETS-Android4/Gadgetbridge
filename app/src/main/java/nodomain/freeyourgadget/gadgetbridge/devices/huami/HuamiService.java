@@ -225,14 +225,14 @@ public class HuamiService {
 
     public static final byte COMMAND_SET_PERIODIC_HR_MEASUREMENT_INTERVAL = 0x14;
 
-    public static final byte[] COMMAND_TEXT_NOTIFICATION = new byte[] {0x05, 0x01};
+    public static final byte[] COMMAND_TEXT_NOTIFICATION = new byte[]{0x05, 0x01};
 
     /**
      * Endpoints for 2021 chunked protocol
-     *
      */
-    public static final short CHUNKED2021_ENDPOINT_AUTH = 0x82;
-    public static final short CHUNKED2021_ENDPOINT_COMPAT = 0x90;
+    public static final short CHUNKED2021_ENDPOINT_AUTH = 0x0082;
+    public static final short CHUNKED2021_ENDPOINT_COMPAT = 0x0090;
+    public static final short CHUNKED2021_ENDPOINT_SMSREPLY = 0x0013;
 
     static {
         MIBAND_DEBUG = new HashMap<>();

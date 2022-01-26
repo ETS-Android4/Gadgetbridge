@@ -1828,7 +1828,7 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
 
     byte[] alarmConfigurationReassemblyBuffer;
 
-    private void handleConfigurationInfo(byte[] value) {
+    void handleConfigurationInfo(byte[] value) {
         if (value == null || value.length < 4) {
             return;
         }
