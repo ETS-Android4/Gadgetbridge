@@ -42,10 +42,10 @@ public class HuamiChunked2021Decoder {
     }
 
 
-    public void decode(byte[] data) {
+    public byte[] decode(byte[] data) {
         int i = 0;
         if (data[i++] != 0x03) {
-            return;
+            return null;
         }
         boolean encrypted = false;
         byte flags = data[i++];
@@ -58,7 +58,7 @@ public class HuamiChunked2021Decoder {
         byte handle = data[i++];
         if (currentHandle != null && currentHandle != handle) {
             LOG.warn("ignoring handle " + handle + ", expected " + currentHandle);
-            return;
+            return null;
         }
         byte count = data[i++];
         if ((flags & 0x01) == 0x01) { // beginning
@@ -90,12 +90,14 @@ public class HuamiChunked2021Decoder {
                     LOG.info("decrypted data: " + GB.hexdump(buf));
                 } catch (Exception e) {
                     LOG.warn("error decrypting " + e);
-                    return;
+                    return null;
                 }
             }
             if (currentType == HuamiService.CHUNKED2021_ENDPOINT_COMPAT) {
                 LOG.info("got configuration data");
-                huamiSupport.handleConfigurationInfo(ArrayUtils.remove(buf, 0));
+                currentHandle = null;
+                currentType = 0;
+                return ArrayUtils.remove(buf, 0);
             }
             if (currentType == HuamiService.CHUNKED2021_ENDPOINT_SMSREPLY) {
                 LOG.debug("got command for SMS reply");
@@ -140,5 +142,6 @@ public class HuamiChunked2021Decoder {
             currentHandle = null;
             currentType = 0;
         }
+        return null;
     }
 }

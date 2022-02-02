@@ -236,6 +236,7 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
     protected int mActivitySampleSize = 4;
     protected boolean force2021Protocol = false;
     private HuamiChunked2021Decoder huamiChunked2021Decoder;
+
     public HuamiSupport() {
         this(LOG);
     }
@@ -1730,7 +1731,10 @@ public class HuamiSupport extends AbstractBTLEDeviceSupport {
             handleConfigurationInfo(characteristic.getValue());
             return true;
         } else if (HuamiService.UUID_CHARACTERISTIC_CHUNKEDTRANSFER_2021_READ.equals(characteristicUUID) && huamiChunked2021Decoder != null) {
-            huamiChunked2021Decoder.decode(characteristic.getValue());
+            byte[] decoded_data = huamiChunked2021Decoder.decode(characteristic.getValue());
+            if (decoded_data != null) {
+                handleConfigurationInfo(decoded_data);
+            }
             return true;
         } else {
             LOG.info("Unhandled characteristic changed: " + characteristicUUID);

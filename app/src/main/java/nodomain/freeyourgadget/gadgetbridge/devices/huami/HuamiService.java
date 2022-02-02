@@ -225,7 +225,7 @@ public class HuamiService {
 
     public static final byte COMMAND_SET_PERIODIC_HR_MEASUREMENT_INTERVAL = 0x14;
 
-    public static final byte[] COMMAND_TEXT_NOTIFICATION = new byte[]{0x05, 0x01};
+    public static final byte[] COMMAND_TEXT_NOTIFICATION = new byte[] {0x05, 0x01};
 
     /**
      * Endpoints for 2021 chunked protocol
